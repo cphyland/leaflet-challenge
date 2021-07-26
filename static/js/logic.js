@@ -49,6 +49,17 @@ d3.json(link, function(data) {
     var magnitude = earthquake.properties.mag;  
 
 
+// adding markers and popups
+L.circle([earthquake.geometry.coordinates[1], earthquake.geometry.coordinates[0]], {
+  fillOpacity: 0.75,
+  color: "white",
+  fillColor: circleColor(+magnitude),
+  radius: magnitude * 1500
+}).bindPopup("<h1>" + earthquake.properties.place + "</h1> <hr> <h3>Magnitude: " + magnitude + "</h3>").addTo(myMap).addTo(myMap); 
+};
+});
+
+// create legend
 
 
 
