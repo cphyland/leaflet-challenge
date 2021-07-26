@@ -1,63 +1,97 @@
 var myMap = L.map("map", {
-  center: [39.8283, -98.5795],
+  center: [37.7749, -122.4194],
   zoom: 9
 });
 
-// tile layer
-L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-  attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+
+var outdoors = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+  attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+  tileSize: 512,
   maxZoom: 18,
-  id: "mapbox.streets-basic",
+  zoomOffset: -1,
+  id: "mapbox/outdoors-v11",
   accessToken: API_KEY
-}).addto(myMap);
-
-
-// color coding
-function circleColor(magnitude) {
-  if (magnitude <= 0.75) {
-    return "yellow";
-  }
-  else if (magnitude > 0.75 && magnitude <= 1.5) {
-    return "green";
-  }
-  else {
-    return "red";
-  }
-}
-
+}).addTo(myMap);
 
 // Our AJAX call retrieves our earthquake geoJSON data.
 var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 d3.json(link, function(data) {
-  var earthquakes = data.features;
-  console.log(earthquakes)
-  for (var i = 0; i < earthquakes.length; i++) {
-    var earthquake = earthquakes[i];
-    var magnitude = earthquake.properties.mag;  
+  
 
-
-// adding markers and popups
-L.circle([earthquake.geometry.coordinates[1], earthquake.geometry.coordinates[0]], {
-  fillOpacity: 0.75,
-  color: "white",
-  fillColor: circleColor(+magnitude),
-  radius: magnitude * 1500
-}).bindPopup("<h1>" + earthquake.properties.place + "</h1> <hr> <h3>Magnitude: " + magnitude + "</h3>").addTo(myMap).addTo(myMap); 
-};
-});
-
-// create legend
-var legend = L.control({position: 'bottomleft'});
-  legend.onAdd = function() {
-    var div = L.DomUtil.create('div', 'info legend');
-    var labels = ["Earthquake Magnitude 0-0.75", "Earthquake Magnitude 0.75-1.5", "Earthquake Magnitude 1.50+"];
-    var levels = [0.75, 1.5, 2]
-    div.innerHTML = '<div><strong>Legend</strong></div>';
-    for(var i = 0; i < labels.length; i++) {
-      div.innerHTML += '<i style = "background: ' + circleColor(levels[i]) + '">&nbsp;</i>&nbsp;&nbsp;'
-      + labels[i] + '<br/>';
+  // creating data markers
+  function mapStyle(feature) {
+    return {
+      opacity: 1,
+      fillOpacity: 1,
+      fillColor: mapColor(feature.properties.mag),
+      color: "#000000",
+      radius: mapRadius(feature.properties.mag),
+      stroke: true,
+      weight: 0.5
     };
-    return div;
-  };
-legend.addTo(myMap);  
+  }
+  function mapColor(mag) {
+    switch (true) {
+      case mag > 5:
+        return "#ea2c2c";
+      case mag > 4:
+        return "#eaa92c";
+      case mag > 3:
+        return "#d5ea2c";
+      case mag > 2:
+        return "#92ea2c";
+      case mag > 1:
+        return "#2ceabf";
+      default:
+        return "#2c99ea";
+    }
+  }
 
+  function mapRadius(mag) {
+    if (mag === 0) {
+      return 1;
+    }
+
+    return mag * 4;
+  }
+  
+
+
+  L.geoJson(data, {
+
+    pointToLayer: function(feature, latlng) {
+      return L.circleMarker(latlng);
+    },
+
+    style: mapStyle,
+
+    onEachFeature: function(feature, layer) {
+      layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
+
+    }
+  }).addTo(myMap);
+
+  var legend = L.control({
+    position: "bottomright"
+  });
+
+  legend.onAdd = function() {
+    var div = L.DomUtil.create("div", "info legend");
+
+    var grades = [0, 1, 2, 3, 4, 5];
+    var colors = ["#2c99ea", "#2ceabf", "#92ea2c", "#d5ea2c","#eaa92c", "#ea2c2c"];
+
+
+  // loop thry the intervals of colors to put it in the label
+    for (var i = 0; i<grades.length; i++) {
+      div.innerHTML +=
+      "<i style='background: " + colors[i] + "'></i> " +
+      grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+    }
+    return div;
+
+  };
+
+  legend.addTo(myMap)
+  
+});
