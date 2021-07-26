@@ -60,6 +60,8 @@ L.circle([earthquake.geometry.coordinates[1], earthquake.geometry.coordinates[0]
 });
 
 // create legend
-
+var legend = L.control({position: 'bottomleft'});
+  legend.onAdd = function() {
+    
 
 
