@@ -64,6 +64,8 @@ var legend = L.control({position: 'bottomleft'});
   legend.onAdd = function() {
     var div = L.DomUtil.create('div', 'info legend');
     var labels = ["Earthquake Magnitude 0-0.75", "Earthquake Magnitude 0.75-1.5", "Earthquake Magnitude 1.50+"];
-    
+    var levels = [0.75, 1.5, 2]
+    div.innerHTML = '<div><strong>Legend</strong></div>';
+    for(var i = 0; i < labels.length; i++) {
 
 
