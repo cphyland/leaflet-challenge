@@ -69,5 +69,8 @@ var legend = L.control({position: 'bottomleft'});
     for(var i = 0; i < labels.length; i++) {
       div.innerHTML += '<i style = "background: ' + circleColor(levels[i]) + '">&nbsp;</i>&nbsp;&nbsp;'
       + labels[i] + '<br/>';
-      
+    };
+    return div;
+  };
+legend.addTo(myMap);  
 
