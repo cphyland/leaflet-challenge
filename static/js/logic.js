@@ -40,7 +40,13 @@ function circleColor(magnitude) {
 
 
 // Our AJAX call retrieves our earthquake geoJSON data.
-d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson", function(data) {
+var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+d3.json(link, function(data) {
+  var earthquakes = data.features;
+  console.log(earthquakes)
+  for (var i = 0; i < earthquakes.length; i++) {
+    var earthquake = earthquakes[i];
+    var magnitude = earthquake.properties.mag;  
 
 
 
