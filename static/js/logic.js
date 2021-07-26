@@ -63,6 +63,7 @@ L.circle([earthquake.geometry.coordinates[1], earthquake.geometry.coordinates[0]
 var legend = L.control({position: 'bottomleft'});
   legend.onAdd = function() {
     var div = L.DomUtil.create('div', 'info legend');
+    var labels = ["Earthquake Magnitude 0-0.75", "Earthquake Magnitude 0.75-1.5", "Earthquake Magnitude 1.50+"];
     
 
 
