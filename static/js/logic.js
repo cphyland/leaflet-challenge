@@ -67,5 +67,7 @@ var legend = L.control({position: 'bottomleft'});
     var levels = [0.75, 1.5, 2]
     div.innerHTML = '<div><strong>Legend</strong></div>';
     for(var i = 0; i < labels.length; i++) {
-
+      div.innerHTML += '<i style = "background: ' + circleColor(levels[i]) + '">&nbsp;</i>&nbsp;&nbsp;'
+      + labels[i] + '<br/>';
+      
 
