@@ -44,8 +44,7 @@ function circleColor(magnitude) {
   }
 }
 
-
-// Our AJAX call retrieves our earthquake geoJSON data.
+// call our earthquake geoJSON data.
 var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 d3.json(link, function(data) {
   var earthquakes = data.features;
