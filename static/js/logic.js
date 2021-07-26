@@ -25,7 +25,18 @@ var outdoors = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/
   accessToken: API_KEY
 });
 
-
+// color coding
+function circleColor(magnitude) {
+  if (magnitude <= 0.75) {
+    return "yellow";
+  }
+  else if (magnitude > 0.75 && magnitude <= 1.5) {
+    return "green";
+  }
+  else {
+    return "red";
+  }
+}
 
 
 // Our AJAX call retrieves our earthquake geoJSON data.
@@ -34,9 +45,4 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
 
 
 
-
-
-  // Here we make an AJAX call to get our Tectonic Plate geoJSON data.
-  d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json",
-    function(platedata) {
 
